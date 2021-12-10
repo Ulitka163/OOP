@@ -21,10 +21,7 @@ class Student:
         grades_all = []
         for i in self.grades:
             grades_all.extend(self.grades.get(i))
-        sum_grades = 0
-        for i in grades_all:
-            sum_grades += i
-        return sum_grades / len(grades_all) if len(grades_all) != 0 else 'нет оценок'
+        return sum(grades_all) / len(grades_all) if len(grades_all) != 0 else 'нет оценок'
 
     def __str__(self):
         courses_in_progress = ','.join(self.courses_in_progress)
@@ -67,10 +64,7 @@ class Lecturer(Mentor):
         grades_all = []
         for i in self.grades:
             grades_all.extend(self.grades.get(i))
-        sum_grades = 0
-        for i in grades_all:
-            sum_grades += i
-        return sum_grades / len(grades_all) if len(grades_all) != 0 else 'нет оценок'
+        return sum(grades_all) / len(grades_all) if len(grades_all) != 0 else 'нет оценок'
 
     def __str__(self):
         return f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.average_rating()}'
@@ -94,25 +88,86 @@ class Reviewer(Mentor):
         return f'Имя: {self.name}\nФамилия: {self.surname}'
 
 
-best_student = Student('Ruoy', 'Eman', 'your_gender')
-best_student.courses_in_progress += ['Python']
+def average_rating_student(course, students=[]):
+    grades_all = []
+    for student in students:
+        grades_all.extend(student.grades[course])
+    return print(sum(grades_all) / len(grades_all))
 
-cool_mentor = Lecturer('Some', 'Buddy')
-cool_mentor.courses_attached += ['Python']
 
-best_student.rate_hw(cool_mentor, 'Python', 10)
-best_student.rate_hw(cool_mentor, 'Python', 10)
-best_student.rate_hw(cool_mentor, 'Python', 10)
+def average_rating_lecturer(course, lecturers=[]):
+    grades_all = []
+    for lecturer in lecturers:
+        grades_all.extend(lecturer.grades[course])
+    return print(sum(grades_all) / len(grades_all))
 
-first_mentor = Lecturer('dew', 'fort')
-first_mentor.courses_attached += ['Python']
 
-best_student.rate_hw(first_mentor, 'Python', 12)
-best_student.rate_hw(first_mentor, 'Python', 12)
-best_student.rate_hw(first_mentor, 'Python', 9)
+# Студенты
+first_student = Student('Ruoy', 'Eman', 'your_gender')
+first_student.courses_in_progress += ['Python']
+first_student.courses_in_progress += ['Physics']
 
-# print(first_mentor.grades)
-# print(best_student)
-# print(cool_mentor)
-# print(first_mentor)
-# print(cool_mentor > first_mentor)
+second_student = Student('Bin', 'Cross', 'your_gender')
+second_student.courses_in_progress += ['Python']
+second_student.courses_in_progress += ['Physics']
+
+# Лекторы
+first_lecturer = Lecturer('Dew', 'Fort')
+first_lecturer.courses_attached += ['Python']
+first_lecturer.courses_attached += ['Physics']
+
+second_lecturer = Lecturer('Some', 'Buddy')
+second_lecturer.courses_attached += ['Python']
+second_lecturer.courses_attached += ['Physics']
+
+# Ревьюэры
+first_reviewer = Reviewer('Mat', 'Grin')
+first_reviewer.courses_attached += ['Python']
+first_reviewer.courses_attached += ['Physics']
+
+second_reviewer = Reviewer('Sara', 'Old')
+second_reviewer.courses_attached += ['Python']
+second_reviewer.courses_attached += ['Physics']
+
+# Студенты выставляют оценки лекторам
+first_student.rate_hw(first_lecturer, 'Python', 5)
+first_student.rate_hw(first_lecturer, 'Physics', 7)
+first_student.rate_hw(second_lecturer, 'Python', 8)
+first_student.rate_hw(second_lecturer, 'Physics', 3)
+
+second_student.rate_hw(first_lecturer, 'Python', 8)
+second_student.rate_hw(first_lecturer, 'Physics', 6)
+second_student.rate_hw(second_lecturer, 'Python', 7)
+second_student.rate_hw(second_lecturer, 'Physics', 4)
+
+# Ревьюэры выставляют оценки студентам
+first_reviewer.rate_hw(first_student, 'Python', 8)
+first_reviewer.rate_hw(first_student, 'Physics', 7)
+first_reviewer.rate_hw(second_student, 'Python', 9)
+first_reviewer.rate_hw(second_student, 'Physics', 6)
+
+second_reviewer.rate_hw(first_student, 'Python', 8)
+second_reviewer.rate_hw(first_student, 'Physics', 9)
+second_reviewer.rate_hw(second_student, 'Python', 5)
+second_reviewer.rate_hw(second_student, 'Physics', 6)
+
+# Оценки
+print(first_student.grades)
+print(second_student.grades)
+print(first_lecturer.grades)
+print(second_lecturer.grades)
+
+# Вызов метода __str__
+print(first_student)
+print(second_student)
+print(first_lecturer)
+print(second_lecturer)
+print(first_reviewer)
+print(second_reviewer)
+
+# Сравнение
+print(first_lecturer > second_lecturer)
+print(first_student > second_student)
+
+average_rating_student('Physics', [first_student, second_student])
+average_rating_lecturer('Physics', [first_lecturer, second_lecturer])
